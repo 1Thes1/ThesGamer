@@ -407,30 +407,72 @@ public partial class MainWindow : Window
     private async void CheckUpdates_Click(object sender, RoutedEventArgs e)
     {
         SetStatus("…");
-        var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.3.0";
+        var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.4.0";
         var result = await UpdateService.CheckAsync(ver);
-        SetStatus(result.Message);
-        if (result.UpdateAvailable && !string.IsNullOrWhiteSpace(result.HtmlUrl))
+        if (!result.Ok)
         {
-            var open = MessageBox.Show(result.Message + "\n\nOpen release page?", "Thes Gamer",
-                MessageBoxButton.YesNo, MessageBoxImage.Information);
-            if (open == MessageBoxResult.Yes)
-                OpenUrl(result.HtmlUrl!);
+            SetStatus(result.Message);
+            return;
         }
+
+        if (!result.UpdateAvailable)
+        {
+            SetStatus(result.Message);
+            return;
+        }
+
+        var ask = MessageBox.Show(
+            result.Message + "\n\n" + Loc.T("update_now"),
+            "Thes Gamer",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (ask != MessageBoxResult.Yes)
+        {
+            SetStatus(result.Message);
+            return;
+        }
+
+        await ApplyUpdateAsync(result);
     }
 
     private async Task CheckUpdatesSilentAsync()
     {
         try
         {
-            var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.3.0";
+            if (!_settings.AutoUpdateEnabled)
+                return;
+
+            var ver = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.4.0";
             var result = await UpdateService.CheckAsync(ver);
-            if (result.UpdateAvailable)
-                SetStatus(result.Message);
+            if (!result.Ok || !result.UpdateAvailable)
+                return;
+
+            SetStatus(result.Message);
+            var ask = MessageBox.Show(
+                result.Message + "\n\n" + Loc.T("update_now"),
+                "Thes Gamer",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Information);
+            if (ask == MessageBoxResult.Yes)
+                await ApplyUpdateAsync(result);
         }
         catch
         {
             // ignore silent failures
+        }
+    }
+
+    private async Task ApplyUpdateAsync(UpdateService.UpdateInfo info)
+    {
+        SetStatus(Loc.T("update_applying"));
+        var target = Environment.ProcessPath ?? AppPaths.ExePath;
+        var progress = new Progress<double>(p => SetStatus($"{Loc.T("update_applying")} {p:0}%"));
+        var (ok, message) = await UpdateService.DownloadAndApplyAsync(info, target, progress);
+        SetStatus(message);
+        if (ok)
+        {
+            Application.Current.Shutdown();
         }
     }
 

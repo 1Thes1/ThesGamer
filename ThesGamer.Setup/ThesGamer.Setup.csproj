@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>ThesGamer-Setup</AssemblyName>
+    <RootNamespace>ThesGamer.Setup</RootNamespace>
+    <Version>0.4.0</Version>
+    <Authors>Thes</Authors>
+    <Product>Thes Gamer Setup</Product>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+</Project>

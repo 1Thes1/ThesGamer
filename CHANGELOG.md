@@ -1,27 +1,19 @@
 # Changelog
 
-## 0.3.0
+## 0.4.0
 
 ### RU
-- Кастомный title bar (без стандартной шапки Windows)
-- Анимация смены вкладок + hover на карточках
-- Переключатель языка RU / EN
-- Температуры CPU / GPU (если датчики / nvidia-smi доступны)
-- До / после для очистки RAM и Temp
-- Проверка обновлений с GitHub Releases
+- **Установщик** `ThesGamer-Setup.exe` — скачал, установил, ярлыки готовы
+- **Автообновление с GitHub** — скачивает релиз и перезапускает приложение
+- Portable `ThesGamer.exe` без компиляции
+- GitHub Actions для сборки релизов по тегу
 
 ### EN
-- Custom title bar (no default Windows chrome)
-- Tab switch animation + card hover
-- RU / EN language switcher
-- CPU / GPU temperatures (when sensors / nvidia-smi are available)
-- Before / after for RAM and Temp cleanup
-- Update check from GitHub Releases
+- **Installer** `ThesGamer-Setup.exe` — download, install, shortcuts
+- **Auto-update from GitHub** — downloads release and restarts the app
+- Portable `ThesGamer.exe` — no compiling needed
+- GitHub Actions release build on tag
 
-## 0.2.2
+## 0.3.0
 
-- UI polish: ring gauges, readable light numbers, Games page cleanup
-
-## 0.2.1
-
-- Thes VPN-style UI, restore point boost, auto RAM, game presets
+- Custom title bar, RU/EN, temps, before/after, update check

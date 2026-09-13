@@ -8,15 +8,21 @@
 
 ---
 
-## Скачать
+## Скачать / Download
 
 Готовый Windows x64 билд — во вкладке [**Releases**](https://github.com/1Thes1/ThesGamer/releases):
 
-1. Скачай `ThesGamer-*-win-x64.zip`
-2. Распакуй куда угодно (не обязательно Program Files)
-3. Запусти `ThesGamer.exe`
+### Рекомендуется
+1. Скачай **`ThesGamer-Setup-*-win-x64.zip`**
+2. Запусти **`ThesGamer-Setup.exe`**
+3. Нажми **Install / Установить**
 
-.NET runtime ставить **не нужно** (self-contained).
+Установка в `%LOCALAPPDATA%\Thes\ThesGamer\` + ярлыки.  
+Приложение само проверяет обновления на GitHub.
+
+### Portable
+Скачай `ThesGamer-*-win-x64.zip` → распакуй → `ThesGamer.exe`  
+.NET runtime ставить **не нужно**.
 
 ---
 

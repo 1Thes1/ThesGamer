@@ -13,6 +13,7 @@ public sealed class AppSettings
     public string LastGameProfile { get; set; } = "FPS";
     public string LastPresetName { get; set; } = "Black Desert";
     public string Language { get; set; } = "ru";
+    public bool AutoUpdateEnabled { get; set; } = true;
 }
 
 public static class SettingsStore

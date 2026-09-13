@@ -1,0 +1,64 @@
+# Thes Gamer
+
+**PC care · boost · drivers · game tuning** for Windows.
+
+Сделано **Thes** · [github.com/1Thes1](https://github.com/1Thes1)
+
+Интерфейс в стиле Thes VPN: тёмный UI, icon-rail, карточки, teal-акценты.
+
+---
+
+## Скачать
+
+Готовый Windows x64 билд — во вкладке [**Releases**](https://github.com/1Thes1/ThesGamer/releases):
+
+1. Скачай `ThesGamer-*-win-x64.zip`
+2. Распакуй куда угодно (не обязательно Program Files)
+3. Запусти `ThesGamer.exe`
+
+.NET runtime ставить **не нужно** (self-contained).
+
+---
+
+## Возможности
+
+| Раздел | Что делает |
+|--------|------------|
+| **Обзор** | CPU / RAM / диск, Defender, топ процессов |
+| **Память** | Очистка RAM + автоочистка по порогу |
+| **Чистка** | Temp + стандартная очистка диска Windows |
+| **Драйверы** | Скан GPU/сеть/аудио/накопители → Windows Update |
+| **Игры** | Пресеты (BDO, CS2, Valorant…), Game Mode, план питания, приоритет процесса |
+| **Безопасность** | Опциональная точка восстановления перед бустом |
+
+---
+
+## Сборка из исходников
+
+Нужны Windows 10/11 и [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+
+```bat
+dotnet build ThesGamer\ThesGamer.csproj -c Release
+dotnet publish ThesGamer\ThesGamer.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o dist\ThesGamer-win-x64
+```
+
+Или после Release-сборки: `RUN Thes Gamer.bat`
+
+---
+
+## Настройки
+
+`%APPDATA%\ThesGamer\settings.json`
+
+---
+
+## Важно
+
+- Это companion-утилита, **не замена** Windows Defender
+- Драйверы обновляются только через **официальные** каналы Windows
+- Точка восстановления перед бустом рекомендуется (нужны права админа и защита системы)
+- Не связан с Pearl Abyss и издателями игр
+
+## Лицензия
+
+MIT © Thes

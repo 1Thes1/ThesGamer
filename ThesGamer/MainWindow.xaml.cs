@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using ThesGamer.Services;
 
@@ -28,9 +30,11 @@ public partial class MainWindow : Window
 
         Loaded += (_, _) =>
         {
+            TryEnableDarkTitleBar();
             ApplySettingsToUi();
             RefreshOverview(silent: false);
             RefreshMemory();
+            UpdateNavIcons();
             _uiTimer.Start();
         };
         Closed += (_, _) =>
@@ -53,7 +57,6 @@ public partial class MainWindow : Window
                      ?? GamePresets.All[0];
         PresetBox.SelectedItem = preset;
         PresetHint.Text = preset.Name;
-
         SelectProfile(_settings.LastGameProfile);
     }
 
@@ -78,6 +81,7 @@ public partial class MainWindow : Window
             cleanup: NavCleanup.IsChecked == true,
             drivers: NavDrivers.IsChecked == true,
             games: NavGames.IsChecked == true);
+        UpdateNavIcons();
     }
 
     private void ShowPage(bool overview, bool memory, bool cleanup, bool drivers, bool games)
@@ -95,6 +99,20 @@ public partial class MainWindow : Window
             : "Игры";
     }
 
+    private void UpdateNavIcons()
+    {
+        var accent = (Brush)FindResource("BrushAccent");
+        var muted = (Brush)FindResource("BrushMuted");
+        SetIcon(IconOverviewPath, NavOverview.IsChecked == true, accent, muted);
+        SetIcon(IconMemoryPath, NavMemory.IsChecked == true, accent, muted);
+        SetIcon(IconCleanupPath, NavCleanup.IsChecked == true, accent, muted);
+        SetIcon(IconDriversPath, NavDrivers.IsChecked == true, accent, muted);
+        SetIcon(IconGamesPath, NavGames.IsChecked == true, accent, muted);
+    }
+
+    private static void SetIcon(Shape path, bool active, Brush accent, Brush muted) =>
+        path.Stroke = active ? accent : muted;
+
     private void GitHubLink_OnClick(object sender, MouseButtonEventArgs e) =>
         OpenUrl("https://github.com/1Thes1");
 
@@ -107,17 +125,20 @@ public partial class MainWindow : Window
             var snap = SystemMonitorService.GetSnapshot();
             CpuValue.Text = $"{snap.CpuPercent:0}%";
             CpuBar.Value = snap.CpuPercent;
-            CpuPill.Text = $"{snap.CpuPercent:0}%";
+            CpuPill.Text = $"{snap.CpuPercent:0}";
+            RingGeometry.SetPercent(CpuRing, snap.CpuPercent);
 
             RamBar.Value = snap.RamPercent;
-            RamPill.Text = $"{snap.RamPercent:0}%";
+            RamPill.Text = $"{snap.RamPercent:0}";
             RamValue.Text = $"{snap.RamUsedGb:0.0} GB / {snap.RamTotalGb:0.0} GB";
+            RingGeometry.SetPercent(RamRing, snap.RamPercent);
 
             DiskValue.Text = $"{snap.DiskPercent:0}%";
             DiskBar.Value = snap.DiskPercent;
-            DiskPill.Text = $"{snap.DiskPercent:0}%";
+            DiskPill.Text = $"{snap.DiskPercent:0}";
+            RingGeometry.SetPercent(DiskRing, snap.DiskPercent);
 
-            HostInfo.Text = $"{snap.Hostname}";
+            HostInfo.Text = snap.Hostname;
             UptimeInfo.Text = $"{snap.OsName} · аптайм {snap.Uptime.Days}д {snap.Uptime.Hours}ч {snap.Uptime.Minutes}м";
             ProcessCountInfo.Text =
                 $"{snap.ProcessCount} процессов · свободно на диске {snap.DiskFreeGb:0.0} GB";
@@ -132,7 +153,6 @@ public partial class MainWindow : Window
                 ? (Brush)FindResource("BrushAccent")
                 : (Brush)FindResource("BrushWarn");
             DefenderUpdated.Text = $"База сигнатур: {def.LastUpdate}";
-
             MemoryStatus.Text = $"{snap.RamAvailableGb:0.00} GB свободно";
 
             if (!silent)
@@ -157,8 +177,7 @@ public partial class MainWindow : Window
             return;
 
         _lastAutoRamUtc = DateTime.UtcNow;
-        var msg = MemoryService.FreeMemory();
-        MemoryLog.Text = "Авто: " + msg;
+        MemoryLog.Text = "Авто: " + MemoryService.FreeMemory();
         SetStatus("Автоочистка RAM");
         RefreshMemory();
     }
@@ -168,10 +187,9 @@ public partial class MainWindow : Window
 
     private void FreeRam_Click(object sender, RoutedEventArgs e)
     {
-        var msg = MemoryService.FreeMemory();
-        MemoryLog.Text = msg;
+        MemoryLog.Text = MemoryService.FreeMemory();
         RefreshMemory();
-        SetStatus(msg);
+        SetStatus(MemoryLog.Text);
     }
 
     private void RefreshMemory_Click(object sender, RoutedEventArgs e) => RefreshMemory();
@@ -182,7 +200,8 @@ public partial class MainWindow : Window
         MemoryStatus.Text = $"{snap.RamAvailableGb:0.00} GB свободно · {snap.RamPercent:0}% занято";
         RamValue.Text = $"{snap.RamUsedGb:0.0} GB / {snap.RamTotalGb:0.0} GB";
         RamBar.Value = snap.RamPercent;
-        RamPill.Text = $"{snap.RamPercent:0}%";
+        RamPill.Text = $"{snap.RamPercent:0}";
+        RingGeometry.SetPercent(RamRing, snap.RamPercent);
     }
 
     private void AutoRam_Changed(object sender, RoutedEventArgs e)
@@ -204,16 +223,14 @@ public partial class MainWindow : Window
 
     private void CleanTemp_Click(object sender, RoutedEventArgs e)
     {
-        var result = CleanupService.CleanTemp();
-        CleanupLog.Text = result.Message;
-        SetStatus(result.Message);
+        CleanupLog.Text = CleanupService.CleanTemp().Message;
+        SetStatus(CleanupLog.Text);
     }
 
     private void DiskCleanup_Click(object sender, RoutedEventArgs e)
     {
-        var msg = CleanupService.OpenDiskCleanup();
-        CleanupLog.Text = msg;
-        SetStatus(msg);
+        CleanupLog.Text = CleanupService.OpenDiskCleanup();
+        SetStatus(CleanupLog.Text);
     }
 
     private void ScanDrivers_Click(object sender, RoutedEventArgs e)
@@ -236,16 +253,6 @@ public partial class MainWindow : Window
         ApplyPreset(preset);
     }
 
-    private void PresetChip_Checked(object sender, RoutedEventArgs e)
-    {
-        if (!IsLoaded) return;
-        if (sender is not RadioButton { Tag: string name }) return;
-        var preset = GamePresets.All.FirstOrDefault(p => p.Name == name);
-        if (preset is null) return;
-        PresetBox.SelectedItem = preset;
-        ApplyPreset(preset);
-    }
-
     private void ApplyPreset(GamePreset preset)
     {
         PresetHint.Text = preset.Name;
@@ -258,8 +265,7 @@ public partial class MainWindow : Window
     private void ApplyBoost_Click(object sender, RoutedEventArgs e)
     {
         PersistSettings();
-        var createRp = RestorePointCheck.IsChecked == true;
-        var msg = GameBoostService.ApplyBoost(SelectedProfile(), createRp);
+        var msg = GameBoostService.ApplyBoost(SelectedProfile(), RestorePointCheck.IsChecked == true);
         GameLog.Text = msg;
 
         if (!string.IsNullOrWhiteSpace(GameProcessBox.Text))
@@ -274,9 +280,8 @@ public partial class MainWindow : Window
 
     private void FocusGame_Click(object sender, RoutedEventArgs e)
     {
-        var msg = GameBoostService.FocusGameProcess(GameProcessBox.Text.Trim());
-        GameLog.Text = msg;
-        SetStatus(msg);
+        GameLog.Text = GameBoostService.FocusGameProcess(GameProcessBox.Text.Trim());
+        SetStatus(GameLog.Text);
         PersistSettings();
     }
 
@@ -299,8 +304,32 @@ public partial class MainWindow : Window
         GameProfileBox.SelectedIndex = 0;
     }
 
-    private void SetStatus(string text) => HeaderUser.Text = text;
+    private void SetStatus(string text) => StatusText.Text = text;
 
     private static void OpenUrl(string url) =>
         Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
+
+    private void TryEnableDarkTitleBar()
+    {
+        try
+        {
+            var hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            if (hwnd == IntPtr.Zero)
+            {
+                SourceInitialized += (_, _) => TryEnableDarkTitleBar();
+                return;
+            }
+
+            var useDark = 1;
+            DwmSetWindowAttribute(hwnd, 20, ref useDark, sizeof(int));
+            DwmSetWindowAttribute(hwnd, 19, ref useDark, sizeof(int));
+        }
+        catch
+        {
+            // ignore on unsupported systems
+        }
+    }
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
 }

@@ -1,21 +1,27 @@
 # Changelog
 
+## 0.3.0
+
+### RU
+- Кастомный title bar (без стандартной шапки Windows)
+- Анимация смены вкладок + hover на карточках
+- Переключатель языка RU / EN
+- Температуры CPU / GPU (если датчики / nvidia-smi доступны)
+- До / после для очистки RAM и Temp
+- Проверка обновлений с GitHub Releases
+
+### EN
+- Custom title bar (no default Windows chrome)
+- Tab switch animation + card hover
+- RU / EN language switcher
+- CPU / GPU temperatures (when sensors / nvidia-smi are available)
+- Before / after for RAM and Temp cleanup
+- Update check from GitHub Releases
+
 ## 0.2.2
 
-- UI polish: ring gauges for CPU/RAM/DISK, dark title bar
-- Fixed dark/black numbers — light readable metrics and tables
-- Cleaner Games page, accent glow on selected preset
-- Nav icons highlight when active
+- UI polish: ring gauges, readable light numbers, Games page cleanup
 
 ## 0.2.1
 
-- UI в стиле Thes VPN: icon-rail, сетка, карточки, pills, Safe Boost
-- Точка восстановления перед игровым бустом
-- Автоочистка RAM по порогу
-- Пресеты игр: Black Desert, CS2, Valorant, Dota 2, Fortnite, GTA V, Minecraft
-- Self-contained Windows x64 release
-
-## 0.2.0
-
-- Базовый комбайн: обзор, память, чистка, драйверы, игры
-- Настройки в `%APPDATA%\ThesGamer`
+- Thes VPN-style UI, restore point boost, auto RAM, game presets

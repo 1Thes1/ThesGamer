@@ -12,6 +12,7 @@ public sealed class AppSettings
     public string LastGameProcess { get; set; } = "BlackDesert64";
     public string LastGameProfile { get; set; } = "FPS";
     public string LastPresetName { get; set; } = "Black Desert";
+    public string Language { get; set; } = "ru";
 }
 
 public static class SettingsStore

@@ -20,16 +20,20 @@
 
 ---
 
-## Возможности
+## Возможности / Features
 
-| Раздел | Что делает |
-|--------|------------|
-| **Обзор** | CPU / RAM / диск, Defender, топ процессов |
-| **Память** | Очистка RAM + автоочистка по порогу |
-| **Чистка** | Temp + стандартная очистка диска Windows |
-| **Драйверы** | Скан GPU/сеть/аудио/накопители → Windows Update |
-| **Игры** | Пресеты (BDO, CS2, Valorant…), Game Mode, план питания, приоритет процесса |
-| **Безопасность** | Опциональная точка восстановления перед бустом |
+| RU | EN |
+|----|----|
+| Обзор CPU/RAM/диск, Defender, процессы | Overview CPU/RAM/disk, Defender, processes |
+| Очистка RAM + автопорог + до/после | RAM cleanup + auto threshold + before/after |
+| Чистка Temp + до/после | Temp cleanup + before/after |
+| Скан драйверов → Windows Update | Driver scan → Windows Update |
+| Игровой буст и пресеты | Game boost and presets |
+| Температуры CPU/GPU | CPU/GPU temperatures |
+| RU/EN язык | RU/EN language |
+| Проверка обновлений GitHub | GitHub update checker |
+| Кастомный title bar | Custom title bar |
+
 
 ---
 
